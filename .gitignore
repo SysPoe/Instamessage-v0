@@ -23,5 +23,3 @@
 hs_err_pid*
 
 # Build directory
-/client/out
-/server/out
