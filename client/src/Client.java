@@ -27,8 +27,8 @@ public class Client extends Thread {
             
             printOut = new PrintWriter(socket.getOutputStream());
             printOut.println(Json.object().add("requestType", "verify").add("content", password));
-            System.out.println("Sending value: \"" + Json.object().add("requestType", "verify").add("content", password) + "\" to server");
             printOut.flush();
+            System.out.println("Sending value: \"" + Json.object().add("requestType", "verify").add("content", password) + "\" to server");
             String messageIn = reader.readLine();
             if(messageIn.equals("denied")) {
                 InstaMessage.loading.setVisible(false);

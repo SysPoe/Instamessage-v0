@@ -16,9 +16,11 @@ public class InstaMessage extends JFrame{
     static Icon loadingGif;
     static JLabel loading;
     static Client chatClient;
+    static InstaMessage instaMessage;
 
     InstaMessage() {
-        device.setFullScreenWindow(this);
+        // device.setFullScreenWindow(this);
+        setSize(1000,1000);
         setLayout(null);
         setTitle("InstaMessage");
 
@@ -104,7 +106,8 @@ public class InstaMessage extends JFrame{
         setVisible(true);
     }
     public static void main(String[] args) {
-        InstaMessage instaMessage = new InstaMessage();
+        instaMessage = new InstaMessage();
+        new Resizer().start();
     }
     public static String formatForJLabel(String orig)
     {

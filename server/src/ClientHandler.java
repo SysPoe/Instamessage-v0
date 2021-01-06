@@ -28,11 +28,12 @@ public class ClientHandler extends Thread{
             PrintWriter out = new PrintWriter(client.getOutputStream());
             while (true) {
                 String clientMessage = reader1.readLine();
-                int clientDisconnected = reader1.read();
+                System.out.println("Data from client: " + clientIP + ". \"" + clientMessage + "\"");
                 JsonObject clientMessageJson = Json.parse(clientMessage).asObject();
 
+
                 // Check to see if client has disconnected
-                if (clientMessage == null || clientDisconnected == -1) {
+                if (clientMessage == null) {
                     client.close();
                     Server.users.decrementAndGet();
                     Server.userNames.remove(clientName);
@@ -51,9 +52,9 @@ public class ClientHandler extends Thread{
                         }
                     }
                     case "registerUsername" -> {
-                        if(verified) {
-                            for(String user : Server.userNames) {
-                                if(clientMessage.replaceFirst("2", "").equals(user)) {
+                        if (verified) {
+                            for (String user : Server.userNames) {
+                                if (clientMessage.replaceFirst("2", "").equals(user)) {
                                     out.println("denied");
                                     client.close();
                                     return;
@@ -62,12 +63,11 @@ public class ClientHandler extends Thread{
                             clientName = clientMessageJson.get("content").asString();
                             Server.userNames.add(clientName);
                             out.println("accept");
-                        }
-                        else out.println("denied");
+                        } else out.println("denied");
                     }
                     case "checkVersion" -> {
                         float ClientVersion = clientMessageJson.get("content").asFloat();
-                        if(ClientVersion == Server.serverVersion) out.println("valid");
+                        if (ClientVersion == Server.serverVersion) out.println("valid");
                         else if (ClientVersion > Server.serverVersion) out.println("outdated server");
                         else if (ClientVersion < Server.serverVersion) out.println("outdated client");
                     }
@@ -78,6 +78,7 @@ public class ClientHandler extends Thread{
                 }
                 out.flush();
             }
+
         } catch (EOFException | SocketException e) {
             try {
                 client.close();
