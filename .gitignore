@@ -28,4 +28,6 @@ hs_err_pid*
 
 # Build directory
 /client/out
+/client/src/META-INF
 /server/out
+/server/META-INF

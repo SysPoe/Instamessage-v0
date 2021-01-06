@@ -5,7 +5,7 @@ import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Server extends Thread{
-    static Server s;
+    public static Server s;
     ServerSocket socket1;
     String password;
     static float serverVersion = 1.0f;

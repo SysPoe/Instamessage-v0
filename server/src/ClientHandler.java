@@ -14,8 +14,7 @@ Legend:
 
 public class ClientHandler extends Thread{
     Socket client;
-    String clientIP;
-    String clientName;
+    String clientIP, clientName;
     ClientHandler(Socket client) {
         this.client = client;
     }
