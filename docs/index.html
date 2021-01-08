@@ -24,17 +24,7 @@
 			@keyframes fromside {
 				from {
 					color: #0f0f0f;
-					left: 90vw;
-				}
-
-				49% {
-					color: #0f0f0f;
-					left: 90vw;
-				}
-
-				50% {
-					color: #0f0f0f;
-					left: 55vw;
+					left: 50vw;
 				}
 
 				to {
@@ -71,41 +61,51 @@
 
 			#projectPage {
 				font-family: sans-serif;
+				color: #0f0f0f;
 				font-size: 0.8vw;
-				color: #f0f0ff;
 				display: block;
 				width: 10vw;
 				text-align: center;
 				position: absolute;
 				top: 9.5vh;
-				left: 45vw;
+				left: 70vw;
 				animation-name: fromside;
-				animation-duration: 4s;
+				animation-delay: 2s;
+				animation-duration: 2s;
+				animation-fill-mode: forwards;
 			}
-			#projectPage:hover {
-				text-decoration: underline;
-			}
+				#projectPage:hover {
+					text-decoration: underline;
+				}
 
 			#releases {
 				font-family: sans-serif;
+				color: #0f0f0f;
 				font-size: 0.8vw;
-				color: #f0f0ff;
 				display: block;
 				width: 10vw;
 				text-align: center;
 				position: absolute;
 				top: 12vh;
-				left: 45vw;
+				left: 70vw;
 				animation-name: fromside;
-				animation-duration: 4s;
+				animation-delay: 2.2s;
+				animation-duration: 2s;
+				animation-fill-mode: forwards;
 			}
-			#releases:hover {
-				text-decoration: underline;
-			}
+				#releases:hover {
+					text-decoration: underline;
+				}
 
 			body {
-				background: #0f0f0f;
+				background-color: #0f0f0f;
 				margin: 0;
+			}
+
+			* {
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+				text-rendering: optimizeLegibility;
 			}
 		</style>
 	</head>
