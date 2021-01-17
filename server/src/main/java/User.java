@@ -1,0 +1,21 @@
+public class User {
+    private String username;
+    private double token;
+    User(String username, double token) {
+        this.username = username;
+        this.token = token;
+    }
+
+    public void sendMessage(String message) {
+        Server.chatSession = Server.chatSession + "\n" + username + ": " + message;
+    }
+
+    public void userLeft() {
+        Server.chatSession = Server.chatSession + "\n" + username + " left the chat session.";
+    }
+
+    public boolean matchToken(double token) {
+        if(token == this.token) return true;
+        else return false;
+    }
+}
