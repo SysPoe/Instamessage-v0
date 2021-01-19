@@ -11,12 +11,12 @@ public class User {
         System.out.println(username + ": " + message);
     }
 
-    public void userLeft() {
-        Server.chatSession = Server.chatSession + "\n" + username + " left the chat session.";
-    }
-
     public boolean matchToken(double token) {
         if(token == this.token) return true;
         else return false;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

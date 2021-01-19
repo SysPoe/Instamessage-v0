@@ -13,6 +13,7 @@ public class Server {
     static String password = "";
     static String chatSession = "";
     static ArrayList<User> users = new ArrayList<>();
+    static ArrayList<WebSocket> sockets = new ArrayList<>();
     public static void main(String[] args) {
         try {
             Scanner scan = new Scanner(System.in);
@@ -28,12 +29,12 @@ public class Server {
                 @Override
                 public void onClose(WebSocket webSocket, int i, String s, boolean b) {
                     System.out.println("Client disconnected.");
+                    sockets.remove(webSocket);
                 }
 
                 @Override
                 public void onMessage(WebSocket webSocket, String s) {
                     try {
-                        System.out.println(s);
                         GsonBuilder gsonBuilder = new GsonBuilder();
                         if (s.equals("")) webSocket.send(gsonBuilder.create().toJson(new Error("invalid request")));
                         else {
@@ -47,6 +48,7 @@ public class Server {
                                         users.add(user);
                                         webSocket.send(gsonBuilder.create().toJson(new Message("token", token + "", 0)));
                                         System.out.println("New user: " + gsonBuilder.create().toJson(user));
+                                        sockets.add(webSocket);
                                     } else {
                                         webSocket.send(gsonBuilder.create().toJson(new Error("invalid password")));
                                     }
@@ -54,12 +56,8 @@ public class Server {
                                 case "chat" -> {
                                     getUser(message.token).sendMessage(message.content);
                                 }
-                                case "get" -> {
-                                    if(message.content.equals("chat")) {
-                                        if(getUser(message.token) != null) webSocket.send(gsonBuilder.create().toJson(new Message("chat", chatSession, 0)));
-                                        else webSocket.send(gsonBuilder.create().toJson(new Error("invalid token")));
-                                    }
-                                    else webSocket.send(gsonBuilder.create().toJson(new Error("invalid request")));
+                                case "username" -> {
+                                    getUser(message.token).setUsername(message.content);
                                 }
 
                                 default -> webSocket.send(gsonBuilder.create().toJson(new Error("invalid request")));
@@ -80,6 +78,8 @@ public class Server {
                     System.out.println("Server started.");
                 }
             };
+            AutoSender autoSender = new AutoSender();
+            autoSender.start();
             server.start();
         } catch(JsonSyntaxException e) {
             System.out.println("Received unexpected message from client");
