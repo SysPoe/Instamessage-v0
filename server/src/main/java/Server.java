@@ -54,6 +54,13 @@ public class Server {
                                 case "chat" -> {
                                     getUser(message.token).sendMessage(message.content);
                                 }
+                                case "get" -> {
+                                    if(message.content.equals("chat")) {
+                                        if(getUser(message.token) != null) webSocket.send(gsonBuilder.create().toJson(new Message("chat", chatSession, 0)));
+                                        else webSocket.send(gsonBuilder.create().toJson(new Error("invalid token")));
+                                    }
+                                    else webSocket.send(gsonBuilder.create().toJson(new Error("invalid request")));
+                                }
 
                                 default -> webSocket.send(gsonBuilder.create().toJson(new Error("invalid request")));
                             }
