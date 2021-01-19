@@ -1,8 +1,8 @@
 public class Error {
     String type = "error";
-    String error = "";
+    String content = "";
 
     Error(String error) {
-        this.error = error;
+        this.content = error;
     }
 }
