@@ -8,6 +8,7 @@ public class User {
 
     public void sendMessage(String message) {
         Server.chatSession = Server.chatSession + "\n" + username + ": " + message;
+        System.out.println(username + ": " + message);
     }
 
     public void userLeft() {

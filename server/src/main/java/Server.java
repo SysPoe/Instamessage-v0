@@ -7,16 +7,21 @@ import com.google.gson.GsonBuilder;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Server {
+    static String password = "";
     static String chatSession = "";
     static ArrayList<User> users = new ArrayList<>();
     public static void main(String[] args) {
         try {
+            Scanner scan = new Scanner(System.in);
+            System.out.println("Enter password: ");
+            password = scan.nextLine();
             WebSocketServer server = new WebSocketServer(new InetSocketAddress(63439)) {
                 @Override
                 public void onOpen(WebSocket webSocket, ClientHandshake clientHandshake) {
-                    webSocket.send(new GsonBuilder().create().toJson(new Message("client", "accepted")));
+                    webSocket.send(new GsonBuilder().create().toJson(new Message("client", "accepted", 0)));
                     System.out.println("New client");
                 }
 
@@ -28,23 +33,29 @@ public class Server {
                 @Override
                 public void onMessage(WebSocket webSocket, String s) {
                     try {
+                        System.out.println(s);
                         GsonBuilder gsonBuilder = new GsonBuilder();
                         if (s.equals("")) webSocket.send(gsonBuilder.create().toJson(new Error("invalid request")));
                         else {
                             Message message = gsonBuilder.create().fromJson(s, Message.class);
                             switch (message.type) {
                                 case "validate" -> {
-                                    String password = "pass";
                                     if (message.content.equals(password)) {
-                                        webSocket.send(gsonBuilder.create().toJson(new Message("token", createToken() + "")));
+                                        User user;
+                                        double token = createToken();
+                                        user = new User("placeholder", token);
+                                        users.add(user);
+                                        webSocket.send(gsonBuilder.create().toJson(new Message("token", token + "", 0)));
+                                        System.out.println("New user: " + gsonBuilder.create().toJson(user));
                                     } else {
                                         webSocket.send(gsonBuilder.create().toJson(new Error("invalid password")));
                                     }
-                                    System.out.println(message.content);
-                                    break;
+                                }
+                                case "chat" -> {
+                                    getUser(message.token).sendMessage(message.content);
                                 }
 
-                                default -> { webSocket.send(gsonBuilder.create().toJson(new Error("invalid request"))); }
+                                default -> webSocket.send(gsonBuilder.create().toJson(new Error("invalid request")));
                             }
                         }
                     } catch(JsonSyntaxException e) {
@@ -80,5 +91,10 @@ public class Server {
             }
         }
         return token;
+    }
+    static User getUser(double token) {
+        User user = null;
+        for(User u : users) if (u.matchToken(token)) user = u;
+        return user;
     }
 }
