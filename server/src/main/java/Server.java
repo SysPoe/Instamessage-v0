@@ -1,19 +1,11 @@
 import com.google.gson.JsonSyntaxException;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
-import org.java_websocket.server.DefaultSSLWebSocketServerFactory;
 import org.java_websocket.server.WebSocketServer;
 
 import com.google.gson.GsonBuilder;
 
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
-import java.io.File;
-import java.io.FileInputStream;
 import java.net.InetSocketAddress;
-import java.nio.file.Paths;
-import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -66,6 +58,9 @@ public class Server {
                                 }
                                 case "username" -> {
                                     getUser(message.token).setUsername(message.content);
+                                }
+                                case "error" -> {
+                                    System.out.println("Error from client \""+getUser(message.token).getUsername() + "\": "+message.content);
                                 }
 
                                 default -> webSocket.send(gsonBuilder.create().toJson(new Error("invalid request")));

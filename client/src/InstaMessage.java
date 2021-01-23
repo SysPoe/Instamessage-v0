@@ -79,7 +79,7 @@ public class InstaMessage extends JFrame{
             }
         });
         Password.addActionListener(e -> {
-            chatClient = new Client(IP.getText(), Password.getText());
+            chatClient = new Client(IP.getText(), Password.getText(), Nickname.getText());
             chatClient.start();
         });
         add(Password);
