@@ -53,21 +53,17 @@ public class Server {
                                         webSocket.send(gsonBuilder.create().toJson(new Error("invalid password")));
                                     }
                                 }
-                                case "chat" -> {
-                                    getUser(message.token).sendMessage(message.content);
-                                }
-                                case "username" -> {
-                                    getUser(message.token).setUsername(message.content);
-                                }
-                                case "error" -> {
-                                    System.out.println("Error from client \""+getUser(message.token).getUsername() + "\": "+message.content);
-                                }
+                                case "chat" -> getUser(message.token).sendMessage(message.content);
+                                case "username" -> getUser(message.token).setUsername(message.content);
+                                case "error" -> System.out.println("Error from client \""+getUser(message.token).getUsername() + "\": "+message.content);
 
                                 default -> webSocket.send(gsonBuilder.create().toJson(new Error("invalid request")));
                             }
                         }
                     } catch(JsonSyntaxException e) {
                         System.out.println("Received unexpected message from client: "+s);
+                    } catch (NullPointerException e) {
+
                     }
                 }
 

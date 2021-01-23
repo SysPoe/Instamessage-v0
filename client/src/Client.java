@@ -17,7 +17,7 @@ public class Client extends Thread {
         this.ip=ip;
         this.password = password;
         this.nickname = nickname;
-        token = 0.0
+        token = 0.0;
     }
 
     @Override
@@ -27,6 +27,7 @@ public class Client extends Thread {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
                     send(new GsonBuilder().create().toJson(new Message("validate", password, token)));
+                    System.out.println("Connecting to server: ws://\"+ip+\":63439/");
                 }
 
                 @Override
@@ -48,10 +49,16 @@ public class Client extends Thread {
                                 }
                                 case "token" -> {
                                     token = Double.parseDouble(message.content);
-                                    send()
+                                    send(gsonBuilder.create().toJson(new Message("username", nickname, token)));
+                                }
+                                case "chat" -> {
+                                    System.out.println("chat: "+message.content);
                                 }
 
-                                default -> send(gsonBuilder.create().toJson(new Message("error", "invalid message", token)));
+                                default -> {
+                                    System.out.println("Invalid message: "+s);
+                                    send(gsonBuilder.create().toJson(new Message("error", "invalid message", token)));
+                                }
                             }
                         }
                     } catch (Exception e) {
@@ -61,20 +68,16 @@ public class Client extends Thread {
 
                 @Override
                 public void onClose(int i, String s, boolean b) {
-
+                    System.out.println("Closed connection: "+i);
                 }
 
                 @Override
                 public void onError(Exception e) {
-
+                    e.printStackTrace();
                 }
-            }
+            };
+            webSocketClient.connect();
 
-        } catch(IOException ioException) {
-            System.out.println("Failed to connect.");
-            InstaMessage.Incorrect.setVisible(true);
-            InstaMessage.Incorrect.setText("Incorrect password or IP address.");
-            InstaMessage.loading.setVisible(false);
         } catch (URISyntaxException uriSyntaxException) {
             System.out.println(uriSyntaxException.getMessage());
         }
