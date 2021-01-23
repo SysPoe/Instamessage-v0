@@ -1,13 +1,9 @@
-import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
-import com.google.gson.GsonBuilder;
-
-import java.io.*;
-import java.net.*;
-import java.security.MessageDigest;
-import java.time.Instant;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class Client extends Thread {
     String ip, password, nickname;
@@ -51,9 +47,7 @@ public class Client extends Thread {
                                     token = Double.parseDouble(message.content);
                                     send(gsonBuilder.create().toJson(new Message("username", nickname, token)));
                                 }
-                                case "chat" -> {
-                                    System.out.println("chat: "+message.content);
-                                }
+                                case "chat" -> System.out.println("chat: "+message.content);
 
                                 default -> {
                                     System.out.println("Invalid message: "+s);

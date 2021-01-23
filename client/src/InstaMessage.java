@@ -9,6 +9,7 @@ public class InstaMessage extends JFrame{
     static Border blackLine = BorderFactory.createLineBorder(Color.black);
     static JLabel Title = new JLabel("InstaMessage");
     static JLabel Incorrect = new JLabel("Incorrect password or IP address.");
+    static JLabel chat = new JLabel("");
     static JTextField IP = new JTextField("Enter IP address");
     static JTextField Nickname = new JTextField("Enter Nickname");
     static JTextField Password = new JTextField("Enter password");
@@ -100,6 +101,13 @@ public class InstaMessage extends JFrame{
         loading.setBounds(getWidth()/2-50, 220, 100,100);
         loading.setVisible(false);
         add(loading);
+
+        chat.setBounds(getWidth()/4, 50, getWidth()/2, getHeight()/2);
+        chat.setBorder(blackLine);
+        chat.setHorizontalTextPosition(JLabel.CENTER);
+        chat.setBackground(new Color(200));
+        chat.setVisible(false);
+        add(chat);
 
         setVisible(true);
         setVisible(false);
