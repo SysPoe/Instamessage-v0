@@ -14,7 +14,7 @@ public class Resizer extends Thread {
             InstaMessage.loading.setBounds(InstaMessage.instaMessage.getWidth() / 2 - 50, 220, 100, 100);
 
             InstaMessage.Title.setBounds(InstaMessage.instaMessage.getWidth() / 2 - InstaMessage.instaMessage.getWidth() / 4, 0, InstaMessage.instaMessage.getWidth() / 2, 60);
-            InstaMessage.Title.setFont(InstaMessage.getFont(InstaMessage.instaMessage.getWidth() / 48));
+            InstaMessage.Title.setFont(InstaMessage.getFont(21));
             InstaMessage.Title.setHorizontalAlignment(JLabel.CENTER);
             InstaMessage.Title.setVerticalAlignment(JLabel.CENTER);
 

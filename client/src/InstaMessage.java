@@ -91,7 +91,7 @@ public class InstaMessage extends JFrame{
         add(Incorrect);
 
         Title.setBounds(getWidth()/2-getWidth()/4, 0, getWidth()/2, 60);
-        Title.setFont(getFont(getWidth()/48));
+        Title.setFont(getFont(21));
         Title.setHorizontalAlignment(JLabel.CENTER);
         Title.setVerticalAlignment(JLabel.CENTER);
         add(Title);
