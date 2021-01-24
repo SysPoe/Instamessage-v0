@@ -1,7 +1,10 @@
+import com.google.gson.GsonBuilder;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 public class InstaMessage extends JFrame{
     static GraphicsEnvironment graphics = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -13,6 +16,7 @@ public class InstaMessage extends JFrame{
     static JTextField IP = new JTextField("Enter IP address");
     static JTextField Nickname = new JTextField("Enter Nickname");
     static JTextField Password = new JTextField("Enter password");
+    static JTextField sendMessage = new JTextField();
     static JButton close = new JButton("X");
     static Icon loadingGif;
     static JLabel loading;
@@ -104,10 +108,17 @@ public class InstaMessage extends JFrame{
 
         chat.setBounds(getWidth()/4, 50, getWidth()/2, getHeight()/2);
         chat.setBorder(blackLine);
-        chat.setHorizontalTextPosition(JLabel.CENTER);
         chat.setBackground(new Color(200));
         chat.setVisible(false);
         add(chat);
+
+        sendMessage.setBounds(getWidth()/4, getHeight()/2 + 120, getWidth()/2, 20);
+        sendMessage.addActionListener(e -> {
+            sendMessage(sendMessage.getText());
+            sendMessage.setText("");
+        });
+        sendMessage.setVisible(false);
+        add(sendMessage);
 
         setVisible(true);
         setVisible(false);
@@ -124,5 +135,30 @@ public class InstaMessage extends JFrame{
     public static Font getFont(int size)
     {
         return new Font("Sans-Serif", Font.PLAIN, size);
+    }
+    public static void accepted() {
+        Title.setVisible(false);
+        loading.setVisible(false);
+        Incorrect.setVisible(false);
+        Nickname.setVisible(false);
+        Password.setVisible(false);
+        IP.setVisible(false);
+
+        chat.setVisible(true);
+        sendMessage.setVisible(true);
+    }
+    public static void declined() {
+        Title.setVisible(true);
+        Nickname.setVisible(true);
+        Password.setVisible(true);
+        IP.setVisible(true);
+
+        chat.setVisible(false);
+        sendMessage.setVisible(false);
+        loading.setVisible(false);
+        Incorrect.setVisible(false);
+    }
+    public static void sendMessage(String s) {
+        Client.webSocketClient.send(new GsonBuilder().create().toJson(new Message("chat", s, Client.token)));
     }
 }

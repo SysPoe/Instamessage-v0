@@ -7,7 +7,8 @@ import java.net.URISyntaxException;
 
 public class Client extends Thread {
     String ip, password, nickname;
-    double token;
+    static double token;
+    static WebSocketClient webSocketClient;
 
     Client(String ip, String password, String nickname) {
         this.ip=ip;
@@ -19,11 +20,11 @@ public class Client extends Thread {
     @Override
     public void run() {
         try{
-            WebSocketClient webSocketClient = new WebSocketClient(new URI("ws://"+ip+":63439/")) {
+            webSocketClient = new WebSocketClient(new URI("ws://"+ip+":63439/")) {
                 @Override
                 public void onOpen(ServerHandshake serverHandshake) {
                     send(new GsonBuilder().create().toJson(new Message("validate", password, token)));
-                    System.out.println("Connecting to server: ws://\"+ip+\":63439/");
+                    System.out.println("Connecting to server: ws://"+ip+":63439/");
                 }
 
                 @Override
@@ -35,19 +36,24 @@ public class Client extends Thread {
                             Message message = gsonBuilder.create().fromJson(s, Message.class);
                             switch(message.type) {
                                 case "error" -> {
+                                    InstaMessage.declined();
                                     InstaMessage.loading.setVisible(false);
-                                    if(message.content.equals("invalid password")) {
-                                        InstaMessage.Incorrect.setVisible(true);
-                                    } else {
-                                        System.out.println("Error: " + message.content);
-                                    }
-                                    close(1);
+                                    InstaMessage.Incorrect.setVisible(true);
+                                    InstaMessage.Incorrect.setText(message.content);
+                                    System.out.println("Error: " + message.content);
+                                    close();
                                 }
                                 case "token" -> {
                                     token = Double.parseDouble(message.content);
                                     send(gsonBuilder.create().toJson(new Message("username", nickname, token)));
                                 }
-                                case "chat" -> System.out.println("chat: "+message.content);
+                                case "chat" -> {
+                                    InstaMessage.accepted();
+                                    InstaMessage.chat.setText(InstaMessage.formatForJLabel(message.content));
+                                }
+                                case "client" -> {
+                                    System.out.println("\"Server\":" + message.type + " "+ message.content);
+                                }
 
                                 default -> {
                                     System.out.println("Invalid message: "+s);
@@ -67,7 +73,9 @@ public class Client extends Thread {
 
                 @Override
                 public void onError(Exception e) {
-                    e.printStackTrace();
+                    InstaMessage.loading.setVisible(false);
+                    InstaMessage.Incorrect.setVisible(true);
+                    InstaMessage.Incorrect.setText(e.getMessage());
                 }
             };
             webSocketClient.connect();

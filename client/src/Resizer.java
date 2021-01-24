@@ -33,6 +33,8 @@ public class Resizer extends Thread {
             InstaMessage.close.setBounds(width - 65, 0, 50, 50);
 
             InstaMessage.chat.setBounds(width/4, 100, width/2, height/2);
+
+            InstaMessage.sendMessage.setBounds(width/4, height/2 + 120, width/2, 20);
         }
     }
 }

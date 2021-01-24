@@ -50,11 +50,19 @@ public class Server {
                                         System.out.println("New user: " + gsonBuilder.create().toJson(user));
                                         sockets.add(webSocket);
                                     } else {
-                                        webSocket.send(gsonBuilder.create().toJson(new Error("invalid password")));
+                                        webSocket.send(gsonBuilder.create().toJson(new Error("Invalid Password")));
                                     }
                                 }
-                                case "chat" -> getUser(message.token).sendMessage(message.content);
-                                case "username" -> getUser(message.token).setUsername(message.content);
+                                case "chat" -> {
+                                    getUser(message.token).sendMessage(message.content);
+                                    for (WebSocket web : Server.sockets) {
+                                        web.send(new GsonBuilder().create().toJson(new Message("chat", Server.chatSession, 0)));
+                                    }
+                                }
+                                case "username" -> {
+                                    if(validUserame(message.content)) getUser(message.token).setUsername(message.content);
+                                    else webSocket.send(gsonBuilder.create().toJson(new Error("Invalid username!")));
+                                }
                                 case "error" -> System.out.println("Error from client \""+getUser(message.token).getUsername() + "\": "+message.content);
 
                                 default -> webSocket.send(gsonBuilder.create().toJson(new Error("invalid request")));
@@ -63,7 +71,7 @@ public class Server {
                     } catch(JsonSyntaxException e) {
                         System.out.println("Received unexpected message from client: "+s);
                     } catch (NullPointerException e) {
-
+                        // Do nothing
                     }
                 }
 
@@ -80,6 +88,10 @@ public class Server {
             AutoSender autoSender = new AutoSender();
             autoSender.start();
             server.start();
+            while(true) {
+                Scanner scanner = new Scanner(System.in);
+                new User("[SERVER]", 0.0).sendMessage(scanner.nextLine());
+            }
         } catch(JsonSyntaxException e) {
             System.out.println("Received unexpected message from client");
         } catch (Exception e) {
@@ -102,5 +114,14 @@ public class Server {
         User user = null;
         for(User u : users) if (u.matchToken(token)) user = u;
         return user;
+    }
+    static boolean validUserame(String s) {
+        boolean valid = true;
+        for(User u : users) {
+            if(u.getUsername().equals(s)) valid = false;
+        }
+        if(s.contains("[SERVER]")) return false;
+        else if(s.contains("[ADMIN]")) return false;
+        return valid;
     }
 }
