@@ -20,7 +20,7 @@ public class Resizer extends Thread {
             InstaMessage.Title.setHorizontalAlignment(JLabel.CENTER);
             InstaMessage.Title.setVerticalAlignment(JLabel.CENTER);
 
-            InstaMessage.Incorrect.setBounds(width / 2 - 100, 150, 200, 20);
+            InstaMessage.Incorrect.setBounds(width / 2 - 300, 150, 600, 20);
             InstaMessage.Incorrect.setHorizontalAlignment(JTextField.CENTER);
             InstaMessage.Incorrect.setForeground(new Color(255, 0, 0));
 

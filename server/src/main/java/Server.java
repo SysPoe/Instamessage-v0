@@ -54,13 +54,35 @@ public class Server {
                                     }
                                 }
                                 case "chat" -> {
-                                    getUser(message.token).sendMessage(message.content);
-                                    for (WebSocket web : Server.sockets) {
-                                        web.send(new GsonBuilder().create().toJson(new Message("chat", Server.chatSession, 0)));
+                                    User user = getUser(message.token);
+                                    if(user.isAdmin()) {
+                                        if(message.content.startsWith("/")) {
+                                            if(message.content.startsWith("/kickall")) {
+                                                for (WebSocket web : Server.sockets) {
+                                                    web.send(new GsonBuilder().create().toJson(new Error("Kicked by admin")));
+                                                }
+                                                sockets.removeAll(sockets);
+                                                users.removeAll(users);
+                                            }
+                                            else if(message.content.startsWith("/shutdown")) {
+                                                for (WebSocket web : Server.sockets) {
+                                                    web.send(new GsonBuilder().create().toJson(new Error("Server shutdown")));
+                                                }
+                                                System.exit(0);
+                                            }
+                                            else if(message.content.startsWith("/password")) {
+                                                password = message.content.replaceFirst("/password ", "");
+                                            }
+                                        }
+                                    } else {
+                                        user.sendMessage(message.content);
+                                        for (WebSocket web : Server.sockets) {
+                                            web.send(new GsonBuilder().create().toJson(new Message("chat", Server.chatSession, 0)));
+                                        }
                                     }
                                 }
                                 case "username" -> {
-                                    if(validUserame(message.content)) {
+                                    if(validUsername(message.content)) {
                                         getUser(message.token).setUsername(message.content);
                                         webSocket.send(new GsonBuilder().create().toJson(new Message("chat", Server.chatSession, 0)));
                                     }
@@ -90,6 +112,19 @@ public class Server {
             };
             server.start();
             System.out.print("Type a username to make that user an admin.\n");
+            Scanner scanner = new Scanner(System.in);
+            while(true) {
+                try {
+                  if(scanner.hasNextLine()) {
+                      String s = scanner.nextLine();
+                      getUser(s).setAdmin(getUser(s).isAdmin() == false);
+                      // Used "getUser(s).isAdmin() == false" instead of "!getUser(s).isAdmin()" because it has issues for some reason.
+                      System.out.println(s + ".isAdmin is now "+getUser(s).isAdmin());
+                  }
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }
         } catch(JsonSyntaxException e) {
             System.out.println("Received unexpected message from client");
         } catch (Exception e) {
@@ -118,7 +153,7 @@ public class Server {
         for(User u : users) if (u.getUsername().equals(username)) user = u;
         return user;
     }
-    static boolean validUserame(String s) {
+    static boolean validUsername(String s) {
         boolean valid = true;
         for(User u : users) {
             if (u.getUsername().equals(s)) {
