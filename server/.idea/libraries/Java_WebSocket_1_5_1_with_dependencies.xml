@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="Java-WebSocket-1.5.1-with-dependencies">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../dependencies/Java-WebSocket-1.5.1-with-dependencies.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../Java-WebSocket-1.5.1-with-dependencies.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
