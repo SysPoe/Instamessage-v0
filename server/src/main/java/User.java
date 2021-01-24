@@ -1,6 +1,7 @@
 public class User {
     private String username;
     private double token;
+    private boolean admin;
     User(String username, double token) {
         this.username = username;
         this.token = token;
@@ -22,5 +23,13 @@ public class User {
 
     public String getUsername() {
         return this.username;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 }

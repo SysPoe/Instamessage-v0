@@ -60,7 +60,10 @@ public class Server {
                                     }
                                 }
                                 case "username" -> {
-                                    if(validUserame(message.content)) getUser(message.token).setUsername(message.content);
+                                    if(validUserame(message.content)) {
+                                        getUser(message.token).setUsername(message.content);
+                                        webSocket.send(new GsonBuilder().create().toJson(new Message("chat", Server.chatSession, 0)));
+                                    }
                                     else webSocket.send(gsonBuilder.create().toJson(new Error("Invalid username!")));
                                 }
                                 case "error" -> System.out.println("Error from client \""+getUser(message.token).getUsername() + "\": "+message.content);
@@ -85,13 +88,8 @@ public class Server {
                     System.out.println("Server started.");
                 }
             };
-            AutoSender autoSender = new AutoSender();
-            autoSender.start();
             server.start();
-            while(true) {
-                Scanner scanner = new Scanner(System.in);
-                new User("[SERVER]", 0.0).sendMessage(scanner.nextLine());
-            }
+            System.out.print("Type a username to make that user an admin.\n");
         } catch(JsonSyntaxException e) {
             System.out.println("Received unexpected message from client");
         } catch (Exception e) {
@@ -115,10 +113,18 @@ public class Server {
         for(User u : users) if (u.matchToken(token)) user = u;
         return user;
     }
+    static User getUser(String username) {
+        User user = null;
+        for(User u : users) if (u.getUsername().equals(username)) user = u;
+        return user;
+    }
     static boolean validUserame(String s) {
         boolean valid = true;
         for(User u : users) {
-            if(u.getUsername().equals(s)) valid = false;
+            if (u.getUsername().equals(s)) {
+                valid = false;
+                break;
+            }
         }
         if(s.contains("[SERVER]")) return false;
         else if(s.contains("[ADMIN]")) return false;
