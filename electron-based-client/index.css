@@ -29,6 +29,26 @@ body {
     color: white;
 }
 
+#web-chat-screen {
+    display: none;
+    text-align: center;
+}
+
+#web-chat {
+    height: 50vh;
+    text-align: center;
+
+    border-style: solid;
+    border-color: white;
+
+    color: white;
+}
+
+#web-error {
+    color: red;
+    text-align: center;
+}
+
 #inputs {
     text-align: center;
 }
@@ -50,4 +70,8 @@ button {
     border-radius: 20px;
     border-color: white;
     color: white;
+}
+
+* {
+    margin: 0;
 }

@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <title>Instamessage Client</title>
     <link rel="stylesheet" type="text/css" href="index.css">
-    <script>
+    <script src="index.js">
     </script>
 </head>
-<body onload="onLoad();" class="dark">
+<body>
     <div id="title">
         Instamessage
     </div>
@@ -23,6 +23,13 @@
         <br /><input id="password" type="password" placeholder="Password">
         <br />
         <br /><button id="connect" onclick="connect()">Connect</button>
+    </div>
+    <br />
+    <br /><div id="web-error"></div>
+    <div id="web-chat-screen">
+        <div id="web-chat"></div>
+        <br />
+        <input id="web-send-message" placeholder="Message" style="width: 50vw;"> <button id="send" onclick="sendMessage()">Send</button>
     </div>
 </body>
 </html>

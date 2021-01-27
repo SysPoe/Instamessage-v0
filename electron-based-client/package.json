@@ -9,5 +9,11 @@
     },
     "dependencies": {
         "electron": "^11.2.1"
-    }
+    },
+    "devDependencies": {
+        "electron-builder": "^22.9.1"
+    },
+    "win": {
+        "target": "NSIS"
+     }
 }
