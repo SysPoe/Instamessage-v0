@@ -36,12 +36,14 @@ body {
 
 #web-chat {
     height: 50vh;
-    text-align: center;
+    text-align: left;
 
     border-style: solid;
     border-color: white;
 
     color: white;
+
+    overflow: hidden;
 }
 
 #web-error {
