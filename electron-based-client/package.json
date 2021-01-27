@@ -1,0 +1,13 @@
+{
+    "name": "instamessage",
+    "version": "0.2",
+    "author": "SysPoe",
+    "description": "Self-Hosted messaging app",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron ."
+    },
+    "dependencies": {
+        "electron": "^11.2.1"
+    }
+}

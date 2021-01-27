@@ -1,0 +1,11 @@
+@font-face {
+    font-family: Syne;
+    src: url('fonts/Syne-VariableFont_wght.ttf');
+}
+
+#title {
+    text-align: center;
+
+    font-family: Syne;
+    font-size: 5vw;
+}
