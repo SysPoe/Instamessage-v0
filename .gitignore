@@ -25,6 +25,8 @@ hs_err_pid*
 # Build directory
 /client/out
 /server/out
+/Instamessage-linux-x64
+/Instamessage-win32-x64
 
 # Electron Stuff
 /electron-based-client/node_modules
