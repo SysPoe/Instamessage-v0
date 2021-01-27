@@ -1,11 +1,39 @@
+@keyframes fadeIn {
+    from {
+        color: rgba(0,0,0,0);
+    }
+}
+
 @font-face {
     font-family: Syne;
     src: url('fonts/Syne-VariableFont_wght.ttf');
+}
+
+body {
+    align-content: center;
+    display: flexbox;
 }
 
 #title {
     text-align: center;
 
     font-family: Syne;
-    font-size: 5vw;
+    font-size: 4vw;
+    display: flex;
+}
+
+#subtitle {
+    text-align: center;
+    
+    font-family: Arial;
+    font-size: 1vw;
+    display: flex;
+}
+
+.light {
+    color: black;
+}
+.dark {
+    color: white;
+    background-color: #000000;
 }
