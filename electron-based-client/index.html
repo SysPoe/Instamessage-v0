@@ -5,8 +5,6 @@
     <title>Instamessage Client</title>
     <link rel="stylesheet" type="text/css" href="index.css">
     <script>
-        function onLoad() {
-        }
     </script>
 </head>
 <body onload="onLoad();" class="dark">
@@ -16,7 +14,15 @@
     <div id="subtitle">
         A self-hosted instant messaging service.
     </div>
-    <br />
-    <input type="text" alt="a" placeholder="IP Address">
+    <br /><br />
+    <div id="inputs">
+        <input id="ip" type="text" placeholder="IP Address">
+        <br />
+        <br /><input id="username" type="text" placeholder="Username">
+        <br />
+        <br /><input id="password" type="password" placeholder="Password">
+        <br />
+        <br /><button id="connect" onclick="connect()">Connect</button>
+    </div>
 </body>
 </html>

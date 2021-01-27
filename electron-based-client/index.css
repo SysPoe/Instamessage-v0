@@ -10,8 +10,7 @@
 }
 
 body {
-    align-content: center;
-    display: flexbox;
+    background-color: black;
 }
 
 #title {
@@ -19,7 +18,7 @@ body {
 
     font-family: Syne;
     font-size: 4vw;
-    display: flex;
+    color: white;
 }
 
 #subtitle {
@@ -27,13 +26,28 @@ body {
     
     font-family: Arial;
     font-size: 1vw;
-    display: flex;
+    color: white;
 }
 
-.light {
-    color: black;
+#inputs {
+    text-align: center;
 }
-.dark {
+
+input {
+    text-align: center;
+    background-color: black;
+    width: 10vw;
+    height: 1.5vw;
+    border-radius: 20px;
+    border-color: white;
     color: white;
-    background-color: #000000;
+}
+
+button {
+    background-color: black;
+    width: 5vw;
+    height: 1.5vw;
+    border-radius: 20px;
+    border-color: white;
+    color: white;
 }
