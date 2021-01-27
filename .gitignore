@@ -27,6 +27,11 @@ hs_err_pid*
 /server/out
 /Instamessage-linux-x64
 /Instamessage-win32-x64
+/Instamessage-linux-arm64
+/Instamessage-linux-armv7l
+/Instamessage-linux-ia32
+/Instamessage-win32-arm64
+/Instamessage-win32-ia32
 
 # Electron Stuff
 /electron-based-client/node_modules
