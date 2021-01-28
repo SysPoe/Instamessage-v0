@@ -51,7 +51,14 @@ body {
     text-align: center;
 }
 
+#loading-container {
+    display: flex;
+    justify-content: center;
+}
+
 #loading {
+    width: 280px;
+    height: 157px;
     display: none;
 }
 

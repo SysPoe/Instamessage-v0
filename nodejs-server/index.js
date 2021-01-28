@@ -12,29 +12,41 @@ readline.question('Enter password ->  ', password => {
 });
 
 const WebSocket = require('ws');
-const server = new WebSocket.Server({
+const HTTP = require('http');
+const HTTPserver = HTTP.createServer();
+
+HTTPserver.listen(63438);
+
+const WSserver = new WebSocket.Server({
+    httpServer: HTTPserver,
     port: 63439
 });
 
 let users = [];
-server.on('connection', function(socket) {
+WSserver.on('connection', function(socket) {
     socket.on('message', function(msg) {
-        message = JSON.parse(msg);
+        let message = JSON.parse(msg);
+        console.log(message);
         if(message.type === "validate") {
              if(message.password === password) {
                  if(validUsername(message.username)) {
-                     let user = new User(socket, message.username)
+                     let token = getUniqueID();
+                     let user = { socket: socket, username: message.username, ipAddress: socket.remoteAddress, token: token };
                      users.push(user);
-                     console.log("New client: " + JSON.stringify(user));
-                     socket.send(JSON.stringify({type: "token", content: getToken()}));
+                     console.log("New client: " + user.username);
+                     socket.send(JSON.stringify({type: "token", content: token}));
                  } else socket.send(JSON.stringify({ type: 'error', content: 'Invalid Username' }));
-             } else socket.send(JSON.stringify({ type: 'error', content: 'Incorrect Password' }));
+             } else {
+                 console.log("Client \""+message.username+"\" tried to authenticate with password: "+message.password);
+                 socket.send(JSON.stringify({ type: 'error', content: 'Incorrect Password', entered: message.password }));
+             }
         } else if(message.type === "error") console.log("Error from client \""+ JSON.parse(getUserFromSocket(socket)) + "\": "+message.content);
         else socket.send(JSON.stringify({type: "error", content: "Invalid Request!"}))
     });
     socket.on('close', function() {
         let user =  getUserFromSocket(socket);
         users = users.filter(u => u !== user);
+        console.log("Client \""+user.username+"\" disconnected")
     });
     socket.on('error', function (error) {
         console.log(error);
@@ -60,3 +72,14 @@ function getUserFromUsername(username) {
     }
     return user;
 }
+function getUserFromToken(token) {
+    let user = null;
+    for(let i = 0; i < users.length; i++) {
+        if(users[i].token === token) user = users[i];
+    }
+    return user;
+}
+const getUniqueID = () => {
+    const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    return s4() + s4() + '-' + s4();
+};

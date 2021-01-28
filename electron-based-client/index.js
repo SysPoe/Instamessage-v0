@@ -16,6 +16,8 @@ function connect() {
     websocket.onmessage = onMessage;
     websocket.onerror = onError;
 
+    console.log("Connecting to: ws://"+ip+":63439");
+
     document.getElementById("web-send-message").addEventListener("keyup", function(e) {
         if(e.key === "Enter") {
             e.preventDefault();
@@ -35,6 +37,7 @@ function onOpen() {
 }
 function onMessage(e) {
     const message = JSON.parse(e.data);
+    console.log(message);
     if (message.type === "token") {
         uuid = message.content;
         console.log("verified, token is: "+uuid);
@@ -63,6 +66,7 @@ function onMessage(e) {
 }
 function onError() {
     document.getElementById("web-error").innerHTML = "Unable to connect to host: server not found.";
+    document.getElementById("loading").style.display="none";
 }
 function sendMessage() {
     websocket.send(JSON.stringify({type: "chat", content: document.getElementById("web-send-message").value, token: uuid}));
