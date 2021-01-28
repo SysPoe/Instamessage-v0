@@ -16,15 +16,15 @@ body {
 #title {
     text-align: center;
 
-    font-family: Syne;
+    font-family: Syne, sans-serif;
     font-size: 4vw;
     color: white;
 }
 
 #subtitle {
     text-align: center;
-    
-    font-family: Arial;
+
+    font-family: Arial, sans-serif;
     font-size: 1vw;
     color: white;
 }

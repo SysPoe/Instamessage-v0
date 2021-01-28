@@ -29,3 +29,6 @@ hs_err_pid*
 
 # Electron Stuff
 /electron-based-client/node_modules
+
+#Node stuff
+/nodejs-server/node_modules
