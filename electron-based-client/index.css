@@ -51,6 +51,10 @@ body {
     text-align: center;
 }
 
+#loading {
+    display: none;
+}
+
 #inputs {
     text-align: center;
 }
