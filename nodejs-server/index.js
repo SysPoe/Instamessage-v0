@@ -133,8 +133,13 @@ function command(user, message) {
         } else if(message.startsWith("/kickIP")) {
             getUserByIP(message.replace("/banIP ", "")).socket.send(JSON.stringify({type: "error",content: "Kicked by Admin"}));
             getUserByIP(message.replace("/banIP ", "")).socket.close();
+        } else {
+            sendMessage(user, message);
         }
     } else {
+        if(message.startsWith("/all")) {
+            for(let i = 0; i < users.length; i++) users[i].socket.send(JSON.stringify({type: "message", message: "[ALL]" + user.username+": "+message}));
+        }
         sendMessage(user, message);
     }
 }
