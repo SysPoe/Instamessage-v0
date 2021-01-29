@@ -47,6 +47,8 @@ function onMessage(e) {
     } else if (message.type === "error") {
         console.log("Error: "+message.content);
         document.getElementById("web-error").innerHTML = message.content;
+        document.getElementById("inputs").style.display = "block";
+        document.getElementById("web-chat-screen").style.display = "none";
         if(message.content === "Invalid username!") {
             document.getElementById("inputs").style.display = "block";
             document.getElementById("web-chat-screen").style.display = "none";
@@ -59,6 +61,8 @@ function onMessage(e) {
             document.getElementById("web-chat").scrollTop = document.getElementById("web-chat").scrollHeight;
         }
         previousChat = message.content.replace(/\n/g, "<br />");
+    } else if (message.type === "message") {
+        document.getElementById("web-chat").innerHTML = document.getElementById("web-chat").innerHTML + message.message.replace(/\n/g, "<br />") + "<br />";
     }
     else {
         console.log("Recieved from server: "+e.data);
