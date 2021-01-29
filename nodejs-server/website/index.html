@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Instamessage Client</title>
+    <style>
+        @keyframes fadeIn {
+            from {
+                color: rgba(0,0,0,0);
+            }
+        }
+
+        @font-face {
+            font-family: Syne;
+            src: url('https://fonts.googleapis.com/css2?family=Syne&display=swap');
+        }
+
+        body {
+            background-color: black;
+        }
+
+        #title {
+            text-align: center;
+
+            font-family: Syne, sans-serif;
+            font-size: 4vw;
+            color: white;
+        }
+
+        #subtitle {
+            text-align: center;
+
+            font-family: Arial, sans-serif;
+            font-size: 1vw;
+            color: white;
+        }
+
+        #web-chat-screen {
+            display: none;
+            text-align: center;
+        }
+
+        #web-chat {
+            height: 50vh;
+            text-align: left;
+
+            border-style: solid;
+            border-color: white;
+
+            color: white;
+
+            overflow: hidden;
+        }
+
+        #web-error {
+            color: red;
+            text-align: center;
+        }
+
+        #loading-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        #loading {
+            width: 280px;
+            height: 157px;
+            display: none;
+        }
+
+        #inputs {
+            text-align: center;
+        }
+
+        input {
+            text-align: center;
+            background-color: black;
+            width: 10vw;
+            height: 1.5vw;
+            border-radius: 20px;
+            border-color: white;
+            color: white;
+        }
+
+        button {
+            background-color: black;
+            width: 5vw;
+            height: 1.5vw;
+            border-radius: 20px;
+            border-color: white;
+            color: white;
+        }
+
+        * {
+            margin: 0;
+        }
+    </style>
+    <script>
+        let ip;
+        let username;
+        let password;
+
+        let websocket;
+        let uuid = 0;
+        let previousChat = "";
+
+        function connect() {
+            ip = document.getElementById("ip").value;
+            username = document.getElementById("username").value;
+            password = document.getElementById("password").value;
+
+            websocket = new WebSocket("ws://"+ip+":63439");
+            websocket.onopen = onOpen;
+            websocket.onmessage = onMessage;
+            websocket.onerror = onError;
+
+            console.log("Connecting to: ws://"+ip+":63439");
+
+            document.getElementById("web-send-message").addEventListener("keyup", function(e) {
+                if(e.key === "Enter") {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            document.getElementById("loading").style.display="block";
+
+        }
+        function onOpen() {
+            const tosendJSON = {type: "validate", password: password, username: username};
+            const tosend = JSON.stringify(tosendJSON);
+            console.log("Connected to server... authenticating");
+            document.getElementById("loading").style.display="none";
+            websocket.send(tosend);
+        }
+        function onMessage(e) {
+            const message = JSON.parse(e.data);
+            console.log(message);
+            if (message.type === "token") {
+                uuid = message.content;
+                console.log("verified, token is: "+uuid);
+                document.getElementById("web-error").innerHTML = "";
+                document.getElementById("inputs").style.display = "none";
+                document.getElementById("web-chat-screen").style.display = "block";
+            } else if (message.type === "error") {
+                console.log("Error: "+message.content);
+                document.getElementById("web-error").innerHTML = message.content;
+                document.getElementById("inputs").style.display = "block";
+                document.getElementById("web-chat-screen").style.display = "none";
+                if(message.content === "Invalid username!") {
+                    document.getElementById("inputs").style.display = "block";
+                    document.getElementById("web-chat-screen").style.display = "none";
+                }
+            } else if (message.type === "client") {
+                console.log("Message from server: " + message.type + " " + message.content);
+            } else if (message.type === "chat") {
+                document.getElementById("web-chat").innerHTML = message.content.replace(/\n/g, "<br />");
+                if (message.content.replace(/\n/g, "<br />") !== previousChat) {
+                    document.getElementById("web-chat").scrollTop = document.getElementById("web-chat").scrollHeight;
+                }
+                previousChat = message.content.replace(/\n/g, "<br />");
+            } else if (message.type === "message") {
+                document.getElementById("web-chat").innerHTML = document.getElementById("web-chat").innerHTML + message.message.replace(/\n/g, "<br />") + "<br />";
+            }
+            else {
+                console.log("Recieved from server: "+e.data);
+            }
+        }
+        function onError() {
+            document.getElementById("web-error").innerHTML = "Unable to connect to host: server not found.";
+            document.getElementById("loading").style.display="none";
+        }
+        function sendMessage() {
+            websocket.send(JSON.stringify({type: "chat", content: document.getElementById("web-send-message").value, token: uuid}));
+            document.getElementById("web-send-message").value = "";
+        }
+    </script>
+</head>
+<body>
+    <div id="title">
+        Instamessage
+    </div>
+    <div id="subtitle">
+        A self-hosted instant messaging service.
+    </div>
+    <br /><br />
+    <div id="inputs">
+        <input id="ip" type="text" placeholder="IP Address" value="178.128.16.246" hidden="hidden">
+        <br />
+        <br /><input id="username" type="text" placeholder="Username">
+        <br />
+        <br /><input id="password" type="password" placeholder="Password" value="" hidden="hidden">
+        <br />
+        <br /><button id="connect" onclick="connect()">Connect</button>
+    </div>
+    <br /><div id="loading-container"><img src="img/loading.gif" id="loading" alt="loading"></div>
+    <br /><div id="web-error"></div>
+    <div id="web-chat-screen">
+        <div id="web-chat"></div>
+        <br />
+        <input id="web-send-message" placeholder="Message" style="width: 50vw;"> <button id="send" onclick="sendMessage()">Send</button>
+    </div>
+</body>
+</html>

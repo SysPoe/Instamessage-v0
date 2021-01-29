@@ -7,6 +7,7 @@ const WebSocket = require('ws');
 const HTTP = require('http');
 const HTTPserver = HTTP.createServer();
 const inquirer = require('inquirer')
+const fs = require("fs");
 
 
 HTTPserver.listen(63438);
@@ -141,6 +142,12 @@ const getUniqueID = () => {
     const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
     return s4() + s4() + '-' + s4() + s4() + '-' + s4() + s4() + '-' + s4() + s4();
 };
+
+const website = HTTP.createServer(function (req, res) {
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.write(fs.readFileSync("website/index.html"));
+    res.end();
+}).listen(80);
 
 let psQuestions = [
     {
