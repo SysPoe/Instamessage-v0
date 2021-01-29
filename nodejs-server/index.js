@@ -6,6 +6,8 @@ let password = "";
 const WebSocket = require('ws');
 const HTTP = require('http');
 const HTTPserver = HTTP.createServer();
+const inquirer = require('inquirer')
+
 
 HTTPserver.listen(63438);
 
@@ -16,7 +18,7 @@ const WSserver = new WebSocket.Server({
 
 let users = [];
 WSserver.on('connection', function(socket) {
-    if(bannedIPs.find(value => user.ipAddress.localeCompare(socket._socket.remoteAddress))) {
+    if(bannedIPs.find(value => value.localeCompare(socket._socket.remoteAddress))) {
         socket.close();
     }
     socket.on('message', function(msg) {
@@ -140,18 +142,31 @@ const getUniqueID = () => {
     return s4() + s4() + '-' + s4() + s4() + '-' + s4() + s4() + '-' + s4() + s4();
 };
 
-console.log("Type a username to make that user an admin OR use /password {password} to change the password -> ");
-let standard_input_2;
-standard_input_2 = process.stdin;
-standard_input_2.setEncoding('utf-8');
-standard_input_2.on('data', function (data) {
-    if(data.toString().startsWith("/password")) {
-        password = data.toString().replace("/password ", "");
-        console.log("Password: "+password);
+let psQuestions = [
+    {
+        type: 'input',
+        name: 'data',
+        message: 'Type the password'
     }
-    else {
+]
+inquirer.prompt(psQuestions).then(datas => {
+    password = datas['data'];
+    console.log("Password: "+password);
+    prompt();
+});
+let questions = [
+    {
+        type: 'input',
+        name: 'data',
+        message: "Type a username to make that user an admin -> \n"
+    }
+];
+function prompt() {
+    inquirer.prompt(questions).then(datas => {
+        let data = datas['data'];
         adminIPs.push(getUserFromUsername(data.toString()).ipAddress);
         getUserFromUsername(data.toString()).permissionLevel = 2;
         console.log("Made "+getUserFromUsername(data.toString()).ipAddress+" an admin");
-    }
-});
+        prompt();
+    });
+}
