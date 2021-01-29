@@ -94,7 +94,7 @@ function getUsersByPermissionLevel(level, aboveCounts) {
 function sendMessage(user, message) {
     if(user.permissionLevel === 0) {
         chat.push("0 "+user.username+": "+message);
-        for(let i = 0; i < users.length; i++) user.socket.send(JSON.stringify({type: "message", message: "[GUEST] "+user.username+": "+message}));
+        for(let i = 0; i < users.length; i++) users[i].socket.send(JSON.stringify({type: "message", message: "[GUEST] "+user.username+": "+message}));
     } else if(user.permissionLevel === 1 ) {
         chat.push("1 "+user.username+": "+message);
         let usersWithPerms = getUsersByPermissionLevel(1, true);
