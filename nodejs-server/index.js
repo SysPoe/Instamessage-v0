@@ -160,9 +160,8 @@ function command(user, message) {
             sendMessage(user, message);
         }
     } else {
-        if(message.startsWith("/all")) {
-            for(let i = 0; i < users.length; i++) users[i].socket.send(JSON.stringify({type: "message", message: "[ALL]" + user.username+": "+message.replace("/all ","")}));
-        } else if(message.startsWith("/help") {
+        if(message.startsWith("/all")) for(let i = 0; i < users.length; i++) users[i].socket.send(JSON.stringify({type: "message", message: "[ALL]" + user.username+": "+message.replace("/all ","")}));
+        else if(message.startsWith("/help")) {
             if(user.permissionLevel === 0) user.socket.send(JSON.stringify({type: "message", message: "Commands: \n/all"}));
             else if(user.permissionLevel === 1) user.socket.send(JSON.stringify({type: "message", message: "Commands: \n/all"}));
             else if(user.permissionLevel === 2) user.socket.send(JSON.stringify({type: "message", message: commandsTeir2}));
