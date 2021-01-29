@@ -110,6 +110,29 @@ function sendMessage(user, message) {
     }
 }
 function command(user, message) {
+    let commandsTeir2 = `
+    Commands: \n
+    /getip {username}\n
+    Gets the IP of the specified user
+    \n\n
+    /member {username}\n
+    Sets the specified user to a member status
+    \n\n
+    /guest {username}\n
+    Sets the specified user to a guest status
+    \n\n
+    /banIP {ip}\n
+    Bans the specified IP
+    \n\n
+    /unbanIP {ip}\n
+    Unbans the specified IP
+    \n\n
+    /kickIP\n
+    Kicks the specified IP
+    \n\n
+    /all\n
+    Sends a message to all the tiers
+    `;
     if(user.permissionLevel === 2) {
         if(message.startsWith("/getip")) {
             let u = getUserFromUsername(message.replace("/getip ", ""));
@@ -138,9 +161,14 @@ function command(user, message) {
         }
     } else {
         if(message.startsWith("/all")) {
-            for(let i = 0; i < users.length; i++) users[i].socket.send(JSON.stringify({type: "message", message: "[ALL]" + user.username+": "+message}));
+            for(let i = 0; i < users.length; i++) users[i].socket.send(JSON.stringify({type: "message", message: "[ALL]" + user.username+": "+message.replace("/all ","")}));
+        } else if(message.startsWith("/help") {
+            if(user.permissionLevel === 0) user.socket.send(JSON.stringify({type: "message", message: "Commands: \n/all"}));
+            else if(user.permissionLevel === 1) user.socket.send(JSON.stringify({type: "message", message: "Commands: \n/all"}));
+            else if(user.permissionLevel === 2) user.socket.send(JSON.stringify({type: "message", message: commandsTeir2}));
+        } else {
+            sendMessage(user, message);
         }
-        sendMessage(user, message);
     }
 }
 const getUniqueID = () => {
