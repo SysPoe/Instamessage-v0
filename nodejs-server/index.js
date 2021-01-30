@@ -1,6 +1,6 @@
 let chat = [];
 let bannedIPs = [];
-let adminIPs = [];
+let adminIPs = ["::ffff:158.140.192.86"];
 let password = "";
 
 const WebSocket = require('ws');
