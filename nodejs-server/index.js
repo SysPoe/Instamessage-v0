@@ -57,7 +57,7 @@ WSserver.on('connection', function(socket) {
 });
 function validUsername(username) {
     for(let i = 0; i < users.length; i++) {
-        if(users[i].username === username) return false;
+        if(users[i].username.localeCompare(username)) return false;
     } return true;
 }
 function getUserFromSocket(socket) {
@@ -156,6 +156,11 @@ function command(user, message) {
         } else if(message.startsWith("/kickIP")) {
             getUserByIP(message.replace("/banIP ", "")).socket.send(JSON.stringify({type: "error",content: "Kicked by Admin"}));
             getUserByIP(message.replace("/banIP ", "")).socket.close();
+        } else if(message.startsWith("/all")) for(let i = 0; i < users.length; i++) users[i].socket.send(JSON.stringify({type: "message", message: "[ALL]" + user.username+": "+message.replace("/all ","")}));
+        else if(message.startsWith("/help")) {
+            if(user.permissionLevel === 0) user.socket.send(JSON.stringify({type: "message", message: "Commands: \n/all"}));
+            else if(user.permissionLevel === 1) user.socket.send(JSON.stringify({type: "message", message: "Commands: \n/all"}));
+            else if(user.permissionLevel === 2) user.socket.send(JSON.stringify({type: "message", message: commandsTeir2}));
         } else {
             sendMessage(user, message);
         }
