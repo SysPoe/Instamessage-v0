@@ -32,7 +32,7 @@ WSServer.on('connection', function(socket) {
                     let admin = false;
                     for(let i = 0; i < adminIPs.length; i++) if (adminIPs[i].localeCompare(socket._socket.remoteAddress)) admin = true;
                     let user;
-                    if(admin) user = { "socket": socket, "username": message.username, "ipAddress": socket._socket.remoteAddress, "token": token, "permissionLevel": 2 };
+                    if(admin === true) user = { "socket": socket, "username": message.username, "ipAddress": socket._socket.remoteAddress, "token": token, "permissionLevel": 2 };
                     else user = { "socket": socket, "username": message.username, "ipAddress": socket._socket.remoteAddress, "token": token, "permissionLevel": 0 };
                     users.push(user);
                     console.log({ username: message.username, ipAddress: socket._socket.remoteAddress, token: token, permissionLevel: 0 })
