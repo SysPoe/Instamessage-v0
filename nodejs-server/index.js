@@ -238,7 +238,7 @@ function prompt() {
     inquirer.prompt(questions).then(datas => {
         try {
             let data = datas['data'];
-            adminIPs.push(getUserFromUsername(data.toString()).ipAddress);
+            adminIPs.push(getUserFromUsername(data.toString()).socket._socket.remoteAddress);
             getUserFromUsername(data.toString()).permissionLevel = 2;
             console.log("Made " + getUserFromUsername(data.toString()).ipAddress + " an admin");
         } catch (e) {
