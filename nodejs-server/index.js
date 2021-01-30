@@ -134,35 +134,60 @@ function command(user, message) {
     Sends a message to all the tiers
     `;
     if(user.permissionLevel === 2) {
-        if(message.startsWith("/getip")) {
-            let u = getUserFromUsername(message.replace("/getip ", ""));
-            user.socket.send(JSON.stringify({type: "message", message: u.username+"'s IP Address is: "+u.ipAddress}));
-        } else if(message.startsWith("/member")) {
-            let u = getUserFromUsername(message.replace("/member ", ""));
-            u.permissionLevel = 1;
-            user.socket.send("Set "+u.username+"'s permission level to member.");
-        } else if(message.startsWith("/guest")) {
-            let u = getUserFromUsername(message.replace("/guest ", ""));
-            u.permissionLevel = 0;
-            user.socket.send("Set "+u.username+"'s permission level to guest.");
-        } else if(message.startsWith("/banIP")) {
-            bannedIPs.push(message.replace("/banIP ", ""));
-            user.socket.send("Banned ip: "+message.replace("/guest ", ""));
-            getUserByIP(message.replace("/banIP ", "")).socket.send(JSON.stringify({type:"error",content:"Banned by Admin"}));
-            getUserByIP(message.replace("/banIP ", "")).socket.close();
-        } else if(message.startsWith("/unbanIP")) {
-            bannedIPs = bannedIPs.filter(value => value !== message.replace("/unbanIP ", ""));
-            user.socket.send("Unbanned ip: "+message.replace("/unbanIP ", ""));
-        } else if(message.startsWith("/kickIP")) {
-            getUserByIP(message.replace("/banIP ", "")).socket.send(JSON.stringify({type: "error",content: "Kicked by Admin"}));
-            getUserByIP(message.replace("/banIP ", "")).socket.close();
-        } else if(message.startsWith("/all")) for(let i = 0; i < users.length; i++) users[i].socket.send(JSON.stringify({type: "message", message: "[ALL]" + user.username+": "+message.replace("/all ","")}));
-        else if(message.startsWith("/help")) {
-            if(user.permissionLevel === 0) user.socket.send(JSON.stringify({type: "message", message: "Commands: \n/all"}));
-            else if(user.permissionLevel === 1) user.socket.send(JSON.stringify({type: "message", message: "Commands: \n/all"}));
-            else if(user.permissionLevel === 2) user.socket.send(JSON.stringify({type: "message", message: commandsTeir2}));
-        } else {
-            sendMessage(user, message);
+        try {
+            if (message.startsWith("/getip")) {
+                let u = getUserFromUsername(message.replace("/getip ", ""));
+                user.socket.send(JSON.stringify({
+                    type: "message",
+                    message: u.username + "'s IP Address is: " + u.ipAddress
+                }));
+            } else if (message.startsWith("/member")) {
+                let u = getUserFromUsername(message.replace("/member ", ""));
+                u.permissionLevel = 1;
+                user.socket.send("Set " + u.username + "'s permission level to member.");
+            } else if (message.startsWith("/guest")) {
+                let u = getUserFromUsername(message.replace("/guest ", ""));
+                u.permissionLevel = 0;
+                user.socket.send("Set " + u.username + "'s permission level to guest.");
+            } else if (message.startsWith("/banIP")) {
+                bannedIPs.push(message.replace("/banIP ", ""));
+                user.socket.send("Banned ip: " + message.replace("/guest ", ""));
+                getUserByIP(message.replace("/banIP ", "")).socket.send(JSON.stringify({
+                    type: "error",
+                    content: "Banned by Admin"
+                }));
+                getUserByIP(message.replace("/banIP ", "")).socket.close();
+            } else if (message.startsWith("/unbanIP")) {
+                bannedIPs = bannedIPs.filter(value => value !== message.replace("/unbanIP ", ""));
+                user.socket.send("Unbanned ip: " + message.replace("/unbanIP ", ""));
+            } else if (message.startsWith("/kickIP")) {
+                getUserByIP(message.replace("/banIP ", "")).socket.send(JSON.stringify({
+                    type: "error",
+                    content: "Kicked by Admin"
+                }));
+                getUserByIP(message.replace("/banIP ", "")).socket.close();
+            } else if (message.startsWith("/all")) for (let i = 0; i < users.length; i++) users[i].socket.send(JSON.stringify({
+                type: "message",
+                message: "[ALL]" + user.username + ": " + message.replace("/all ", "")
+            }));
+            else if (message.startsWith("/help")) {
+                if (user.permissionLevel === 0) user.socket.send(JSON.stringify({
+                    type: "message",
+                    message: "Commands: \n/all"
+                }));
+                else if (user.permissionLevel === 1) user.socket.send(JSON.stringify({
+                    type: "message",
+                    message: "Commands: \n/all"
+                }));
+                else if (user.permissionLevel === 2) user.socket.send(JSON.stringify({
+                    type: "message",
+                    message: commandsTeir2
+                }));
+            } else {
+                sendMessage(user, message);
+            }
+        } catch (e) {
+            console.log(e);
         }
     } else {
         if(message.startsWith("/all")) for(let i = 0; i < users.length; i++) users[i].socket.send(JSON.stringify({type: "message", message: "[ALL]" + user.username+": "+message.replace("/all ","")}));
