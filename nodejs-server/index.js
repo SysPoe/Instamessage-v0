@@ -5,20 +5,20 @@ let password = "";
 
 const WebSocket = require('ws');
 const HTTP = require('http');
-const HTTPserver = HTTP.createServer();
+const HTTPServer = HTTP.createServer();
 const inquirer = require('inquirer')
 const fs = require("fs");
 
 
-HTTPserver.listen(63438);
+HTTPServer.listen(63438);
 
-const WSserver = new WebSocket.Server({
-    httpServer: HTTPserver,
+const WSServer = new WebSocket.Server({
+    httpServer: HTTPServer,
     port: 63439
 });
 
 let users = [];
-WSserver.on('connection', function(socket) {
+WSServer.on('connection', function(socket) {
     if(bannedIPs.find(value => value.localeCompare(socket._socket.remoteAddress))) {
         socket.close();
     }
@@ -232,10 +232,14 @@ let questions = [
 ];
 function prompt() {
     inquirer.prompt(questions).then(datas => {
-        let data = datas['data'];
-        adminIPs.push(getUserFromUsername(data.toString()).ipAddress);
-        getUserFromUsername(data.toString()).permissionLevel = 2;
-        console.log("Made "+getUserFromUsername(data.toString()).ipAddress+" an admin");
+        try {
+            let data = datas['data'];
+            adminIPs.push(getUserFromUsername(data.toString()).ipAddress);
+            getUserFromUsername(data.toString()).permissionLevel = 2;
+            console.log("Made " + getUserFromUsername(data.toString()).ipAddress + " an admin");
+        } catch (e) {
+            console.log(e);
+        }
         prompt();
     });
 }
