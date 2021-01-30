@@ -111,26 +111,26 @@ function sendMessage(user, message) {
 }
 function command(user, message) {
     let commandsTeir2 = `
-    Commands: \n
-    /getip {username}\n
+    Commands: 
+    /getip {username}
     Gets the IP of the specified user
-    \n\n
-    /member {username}\n
+    \n
+    /member {username}
     Sets the specified user to a member status
-    \n\n
-    /guest {username}\n
+    \n
+    /guest {username}
     Sets the specified user to a guest status
-    \n\n
-    /banIP {ip}\n
+    \n
+    /banIP {ip}
     Bans the specified IP
-    \n\n
-    /unbanIP {ip}\n
+    \n
+    /unbanIP {ip}
     Unbans the specified IP
-    \n\n
-    /kickIP\n
+    \n
+    /kickIP
     Kicks the specified IP
-    \n\n
-    /all\n
+    \n
+    /all
     Sends a message to all the tiers
     `;
     if(user.permissionLevel === 2) {
