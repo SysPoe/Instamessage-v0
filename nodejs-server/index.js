@@ -1,6 +1,6 @@
 let chat = [];
 let bannedIPs = [];
-let adminIPs = ["::ffff:158.140.192.86"];
+let adminIPs = ["::1"];
 let password = "";
 
 const WebSocket = require('ws');
@@ -22,20 +22,23 @@ WSServer.on('connection', function(socket) {
     if(bannedIPs.find(value => value.localeCompare(socket._socket.remoteAddress))) {
         socket.close();
     }
+
+    console.log("New connection: " + JSON.stringify(socket._socket.address()));
+
     socket.on('message', function(msg) {
         let message = JSON.parse(msg);
         console.log(message);
         if(message.type === "validate") {
-            if(message.password.localeCompare(password)) {
+            if(message.password === password) {
                 if(validUsername(message.username)) {
                     let token = getUniqueID();
                     let admin = false;
-                    for(let i = 0; i < adminIPs.length; i++) if (adminIPs[i].localeCompare(socket._socket.remoteAddress)) admin = true;
+                    for(let i = 0; i < adminIPs.length; i++) if (adminIPs[i] === socket._socket.remoteAddress) admin = true;
                     let user;
-                    if(admin === true) user = { "socket": socket, "username": message.username, "ipAddress": socket._socket.remoteAddress, "token": token, "permissionLevel": 2 };
+                    if(admin) user = { "socket": socket, "username": message.username, "ipAddress": socket._socket.remoteAddress, "token": token, "permissionLevel": 2 };
                     else user = { "socket": socket, "username": message.username, "ipAddress": socket._socket.remoteAddress, "token": token, "permissionLevel": 0 };
                     users.push(user);
-                    console.log({ username: message.username, ipAddress: socket._socket.remoteAddress, token: token, permissionLevel: 0 })
+                    console.log(JSON.stringify({username: user.username, ipAddress: user.ipAddress(), token: token, permissionLevel: user.permissionLevel}));
                     console.log("New client: " + user.ipAddress + " " + user.username);
                     socket.send(JSON.stringify({type: "token", content: token}));
                 } else socket.send(JSON.stringify({ type: 'error', content: 'Invalid Username' }));
