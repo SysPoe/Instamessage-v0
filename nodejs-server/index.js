@@ -20,6 +20,7 @@ const WSServer = new WebSocket.Server({
 let users = [];
 WSServer.on('connection', function(socket) {
     if(bannedIPs.find(value => value.localeCompare(socket._socket.remoteAddress))) {
+        console.log("Banned IP: "+socket._socket.remoteAddress);
         socket.close();
     }
 
