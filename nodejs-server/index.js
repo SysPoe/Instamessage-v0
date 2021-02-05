@@ -1,3 +1,5 @@
+'use strict';
+
 try {
     let chat = [];
     let bannedIPs = [];
@@ -9,7 +11,6 @@ try {
     const HTTPServer = HTTP.createServer();
     const inquirer = require('inquirer')
     const fs = require("fs");
-
 
     HTTPServer.listen(63438);
 
@@ -84,6 +85,7 @@ try {
             console.log(error);
         });
     });
+    console.log("WebSocket server started on port 63439");
 
     function validUsername(username) {
         for (let i = 0; i < users.length; i++) {
@@ -272,9 +274,10 @@ try {
 
     const website = HTTP.createServer(function (req, res) {
         res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write(fs.readFileSync("website/index.html"));
+        res.write(fs.readFileSync("website/index.html").toString().replaceAll("{ IP }", ""));
         res.end();
     }).listen(80);
+    console.log("HTTP server started");
 
     let psQuestions = [
         {
